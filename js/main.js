@@ -1,4 +1,24 @@
 const pokemonContainer = document.querySelector('.pokemon-container');
+const spinner = document.querySelector('#spinner');
+const previous = document.querySelector('#previous');
+const next = document.querySelector('#next');
+
+let offset = 1;
+let limit = 8;
+
+previous.addEventListener('click', ()=>{
+   if(offset != 1){
+    offset -= 9;
+    removeChildNodes(pokemonContainer);
+    serchPokemons(offset, limit);
+   }
+})
+
+next.addEventListener('click',()=>{
+    offset += 9;
+    removeChildNodes(pokemonContainer);
+    serchPokemons(offset, limit);
+})
 
 
 const fetchPokemon = (id) =>{
@@ -6,11 +26,13 @@ const fetchPokemon = (id) =>{
     .then(resp => resp.json())
     .then(data => {
         createPokemon(data);
+        spinner.style.display ='none';
     });
 }
 
-const serchPokemons = (number) =>{
-    for(let i = 1; i<= number; i++){
+const serchPokemons = (offset, limit) =>{
+    spinner.style.display ='block';
+    for(let i = offset; i<= offset + limit; i++){
         fetchPokemon(i);
     }
 }
@@ -41,5 +63,12 @@ const createPokemon = (pokemon) =>{
     pokemonContainer.appendChild(card);
 }
 
-serchPokemons(9);
+const removeChildNodes = (parent)=>{
+    while (parent.firstChild){
+        parent.removeChild(parent.firstChild);
+    }
+
+}
+
+serchPokemons(offset, limit);
 
